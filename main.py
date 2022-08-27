@@ -16,10 +16,6 @@ def init():
     bot = commands.Bot(command_prefix='$', intents=intents)
 
     @bot.command()
-    async def echo(ctx, *, arg):
-        await ctx.send(arg)
-
-    @bot.command()
     async def sync(ctx):
         await bot.tree.sync()
 
