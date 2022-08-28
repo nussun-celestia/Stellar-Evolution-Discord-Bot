@@ -7,7 +7,7 @@ if system() == "Windows":
     si = subprocess.STARTUPINFO()
     si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 elif system() == "Linux":
-    pass
+    si = None
 else:
     raise NotImplementedError("This program is not supported on this system.")
 
