@@ -25,7 +25,14 @@ async def construct_evolve_in(mass, z, tphysf,
 
 
 async def run_sse():
-    sse = subprocess.run('start_sse.bat', capture_output=True, text=True, startupinfo=si)
+    if system() == "Windows":
+        start_file = "start_sse.bat"
+    elif system() == "Linux":
+        start_file = "start_sse.sh"
+    else:
+        raise RuntimeError()
+    
+    sse = subprocess.run(start_file, capture_output=True, text=True, startupinfo=si)
     stdout = sse.stdout
     stdout = stdout.replace('\n\n', '\n')
     return stdout
