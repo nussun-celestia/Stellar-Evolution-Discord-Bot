@@ -1,4 +1,5 @@
 import os
+
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -55,6 +56,7 @@ def init():
 
     @bot.hybrid_command()
     async def plot(ctx, mass, z, tphysf,
+                   xbounds='default', ybounds='default',
                    neta=0.5, bwind=0.0, hewind=0.5, sigma=190.0,
                    ifflag=0, wdflag=1, bhflag=0, nsflag=1, mxns=3.0, idum=999,
                    pts1=0.05, pts2=0.01, pts3=0.02):
@@ -63,7 +65,7 @@ def init():
                                       ifflag=ifflag, wdflag=wdflag, bhflag=bhflag, nsflag=nsflag, mxns=mxns, idum=idum,
                                       pts1=pts1, pts2=pts2, pts3=pts3)
         stdout = await sse.run_sse()
-        await sse_plot.sse_plot()
+        await sse_plot.sse_plot(xbounds, ybounds)
         if 'STOP' in stdout:
             # An error has occured in evolv1
             await ctx.send(f'```{stdout}```')

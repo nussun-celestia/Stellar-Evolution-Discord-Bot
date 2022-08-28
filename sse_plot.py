@@ -6,7 +6,7 @@ from matplotlib.ticker import AutoMinorLocator, MultipleLocator
 import sse
 
 
-async def sse_plot():
+async def sse_plot(xbounds='default', ybounds='default'):
     # Create figure
     fig = plt.figure('SSE HR-diagram', figsize=(4, 5.7))
     ax = plt.gca()
@@ -16,8 +16,20 @@ async def sse_plot():
     mng.window.resizable(False, False)
 
     # Set limits
-    plt.xlim(4.75, 3.3)
-    plt.ylim(-1.8, 6.5)
+    if xbounds == 'default':
+        plt.xlim(4.75, 3.3)
+    elif xbounds == 'auto':
+        ax.invert_xaxis()
+    else:
+        xmin, xmax = xbounds.split(',')
+        xmin, xmax = float(xmin), float(xmax)
+        plt.xlim(xmin, xmax)
+    if ybounds == 'default':
+        plt.ylim(-1.8, 6.5)
+    elif ybounds != 'auto':
+        ymin, ymax = ybounds.split(',')
+        ymin, ymax = float(ymin), float(ymax)
+        plt.ylim(ymin, ymax)
 
     # Set ticks to appear on all axes
     ax.xaxis.set_ticks_position('both')
