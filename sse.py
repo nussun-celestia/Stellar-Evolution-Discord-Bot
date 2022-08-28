@@ -1,10 +1,15 @@
 import subprocess
+from platform import system
 
 from astropy.io import ascii
 
-
-si = subprocess.STARTUPINFO()
-si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+if system() == "Windows":
+    si = subprocess.STARTUPINFO()
+    si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+elif system() == "Linux":
+    pass
+else:
+    raise NotImplementedError("This program is not supported on this system.")
 
 
 async def construct_evolve_in(mass, z, tphysf,
