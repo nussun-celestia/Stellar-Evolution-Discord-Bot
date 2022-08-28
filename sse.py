@@ -29,7 +29,7 @@ async def run_sse():
     if system() == "Windows":
         start_file = "start_sse.bat"
     elif system() == "Linux":
-        start_file = "start_sse.sh"
+        start_file = ["bash", "start_sse.sh"]
     else:
         raise RuntimeError()
     
@@ -44,7 +44,9 @@ def read_evolve_dat():
 
 
 async def debug():
-    await asyncio.sleep(3)
+    await construct_evolve_in(5, 0.00001, 12000)
+    stdout = await run_sse()
+    print(stdout)
 
 
 if __name__ == "__main__":
