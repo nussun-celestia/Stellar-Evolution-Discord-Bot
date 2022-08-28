@@ -42,8 +42,10 @@ async def run_sse():
 def read_evolve_dat():
     return ascii.read('sse/evolve.dat')
 
+
 async def debug():
     await asyncio.sleep(3)
+
 
 if __name__ == "__main__":
     asyncio.run(debug())
