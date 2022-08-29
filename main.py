@@ -9,6 +9,16 @@ import sse
 import sse_plot
 
 
+class EVOLV1FatalError(Exception):
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+
+
+class EVOLV1ArrayError(Exception):
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+
+
 def init():
     load_dotenv()
     TOKEN = os.getenv('DISCORD_TOKEN')
@@ -20,7 +30,7 @@ def init():
     async def sync(ctx):
         await bot.tree.sync()
 
-    @bot.hybrid_command()
+    @bot.tree.command()
     @app_commands.describe(
         # Descriptions borrowed from sse.f
         mass='mass is in solar units.',
@@ -39,10 +49,11 @@ def init():
         mxns='mxns is the maximum NS mass (1.8, nsflag=0; 3.0, nsflag=1).',
         idum='idum is the random number seed used in the kick routine.'
     )
-    async def evolve(ctx, mass, z, tphysf,
-                     neta=0.5, bwind=0.0, hewind=0.5, sigma=190.0,
-                     ifflag=0, wdflag=1, bhflag=0, nsflag=1, mxns=3.0, idum=999,
-                     pts1=0.05, pts2=0.01, pts3=0.02):
+    async def evolve(interaction: discord.Interaction,
+                     mass: float, z: float, tphysf: float,
+                     neta: float=0.5, bwind: float=0.0, hewind: float=0.5, sigma: float=190.0,
+                     ifflag: int=0, wdflag: int=1, bhflag: int=0, nsflag: int=1, mxns: float=3.0, idum: int=999,
+                     pts1: float=0.05, pts2: float=0.01, pts3: float=0.02) -> None:
         await sse.construct_evolve_in(mass, z, tphysf,
                                       neta=neta, bwind=bwind, hewind=hewind, sigma=sigma,
                                       ifflag=ifflag, wdflag=wdflag, bhflag=bhflag, nsflag=nsflag, mxns=mxns, idum=idum,
@@ -50,11 +61,11 @@ def init():
         stdout = await sse.run_sse()
         if 'STOP' in stdout:
             # An error has occured in evolv1
-            await ctx.send(f'```{stdout}```')
+            await interaction.response.send_message(f'```{stdout}```')
         else:
-            await ctx.send(f'```{stdout}```', file=discord.File('sse/evolve.dat'))
+            await interaction.response.send_message(f'```{stdout}```', file=discord.File('sse/evolve.dat'))
 
-    @bot.hybrid_command()
+    @bot.tree.command()
     @app_commands.describe(
         # Descriptions borrowed from sse.f except for xbounds and ybounds
         mass='mass is in solar units.',
@@ -76,11 +87,12 @@ def init():
         mxns='mxns is the maximum NS mass (1.8, nsflag=0; 3.0, nsflag=1).',
         idum='idum is the random number seed used in the kick routine.'
     )
-    async def plot(ctx, mass, z, tphysf,
-                   xbounds='default', ybounds='default',
-                   neta=0.5, bwind=0.0, hewind=0.5, sigma=190.0,
-                   ifflag=0, wdflag=1, bhflag=0, nsflag=1, mxns=3.0, idum=999,
-                   pts1=0.05, pts2=0.01, pts3=0.02):
+    async def plot(interaction: discord.Interaction,
+                   mass: float, z: float, tphysf: float,
+                   xbounds: str='default', ybounds: str='default',
+                   neta: float=0.5, bwind: float=0.0, hewind: float=0.5, sigma: float=190.0,
+                   ifflag: int=0, wdflag: int=1, bhflag: int=0, nsflag: int=1, mxns: float=3.0, idum: int=999,
+                   pts1: float=0.05, pts2: float=0.01, pts3: float=0.02) -> None:
         await sse.construct_evolve_in(mass, z, tphysf,
                                       neta=neta, bwind=bwind, hewind=hewind, sigma=sigma,
                                       ifflag=ifflag, wdflag=wdflag, bhflag=bhflag, nsflag=nsflag, mxns=mxns, idum=idum,
@@ -89,9 +101,9 @@ def init():
         await sse_plot.sse_plot(xbounds, ybounds)
         if 'STOP' in stdout:
             # An error has occured in evolv1
-            await ctx.send(f'```{stdout}```')
+            await interaction.response.send_message(f'```{stdout}```')
         else:
-            await ctx.send(f'```{stdout}```', file=discord.File('hrdiag.png'))
+            await interaction.response.send_message(f'```{stdout}```', file=discord.File('hrdiag.png'))
 
     bot.run(TOKEN)
 

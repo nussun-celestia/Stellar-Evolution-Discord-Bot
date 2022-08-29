@@ -6,7 +6,7 @@ from matplotlib.ticker import AutoMinorLocator, MultipleLocator
 import sse
 
 
-async def sse_plot(xbounds='default', ybounds='default'):
+async def sse_plot(xbounds: str='default', ybounds: str='default') -> None:
     # Create figure
     fig = plt.figure('SSE HR-diagram', figsize=(4, 5.7))
     ax = plt.gca()
