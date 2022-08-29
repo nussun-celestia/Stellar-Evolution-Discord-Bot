@@ -1,2 +1,6 @@
 __pycache__/
+sse/evolve.dat
+sse/evolve.in
 .env
+hrdiag.png
+isochrone.py

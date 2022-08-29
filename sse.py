@@ -13,10 +13,10 @@ else:
     raise NotImplementedError("This program is not supported on this system.")
 
 
-async def construct_evolve_in(mass, z, tphysf,
-                              neta=0.5, bwind=0.0, hewind=0.5, sigma=190.0,
-                              ifflag=0, wdflag=1, bhflag=0, nsflag=1, mxns=3.0, idum=999,
-                              pts1=0.05, pts2=0.01, pts3=0.02):
+async def construct_evolve_in(mass: float, z: float, tphysf: float,
+                              neta: float=0.5, bwind: float=0.0, hewind: float=0.5, sigma: float=190.0,
+                              ifflag: int=0, wdflag: int=1, bhflag: int=0, nsflag: int=1, mxns: float=3.0, idum: int=999,
+                              pts1: float=0.05, pts2: float=0.01, pts3: float=0.02) -> None:
 
     with open('sse/evolve.in', 'w') as evolve_in:
         evolve_in.write(f'{mass} {z} {tphysf}\n')
@@ -39,7 +39,7 @@ async def run_sse():
     return stdout
 
 
-def read_evolve_dat():
+def read_evolve_dat() -> None:
     return ascii.read('sse/evolve.dat')
 
 
