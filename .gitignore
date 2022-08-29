@@ -1,6 +1,10 @@
 __pycache__/
 sse/evolve.dat
 sse/evolve.in
+sse/fort.99
+linux-sse/evolve.dat
+linux-sse/evolve.in
+linux-sse/fort.99
 .env
 hrdiag.png
 isochrone.py
