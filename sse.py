@@ -18,7 +18,11 @@ async def construct_evolve_in(mass: float, z: float, tphysf: float,
                               ifflag: int=0, wdflag: int=1, bhflag: int=0, nsflag: int=1, mxns: float=3.0, idum: int=999,
                               pts1: float=0.05, pts2: float=0.01, pts3: float=0.02) -> None:
 
-    with open('sse/evolve.in', 'w') as evolve_in:
+    if system() == "Windows":
+        evolve_path = 'sse/evolve.in'
+    elif system() == "Linux":
+        evolve_path = 'linux-sse/evolve.in'
+    with open(evolve_path, 'w') as evolve_in:
         evolve_in.write(f'{mass} {z} {tphysf}\n')
         evolve_in.write(f'{neta} {bwind} {hewind} {sigma}\n')
         evolve_in.write(f'{ifflag} {wdflag} {bhflag} {nsflag} {mxns} {idum}\n')
@@ -44,7 +48,7 @@ def read_evolve_dat() -> None:
 
 
 async def debug():
-    await construct_evolve_in(5, 0.00001, 12000)
+    await construct_evolve_in(5.0, 0.02, 12000)
     stdout = await run_sse()
     print(stdout)
 

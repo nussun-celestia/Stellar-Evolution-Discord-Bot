@@ -1,2 +1,2 @@
-cd sse
-sse
+cd linux-sse
+./sse
