@@ -23,6 +23,7 @@ def init():
     @bot.command()
     async def sync(ctx):
         await bot.tree.sync()
+        await ctx.send('Successfully synced commands.')
 
     @bot.tree.command()
     @app_commands.describe(
