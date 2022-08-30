@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 import sse
 import sse_plot
+from generate_embed import *
 
 
 class EVOLV1Error(Exception):
@@ -60,7 +61,8 @@ def init():
             except EVOLV1Error as e:
                 await interaction.response.send_message(f'```{stdout}``````{type(e).__name__}: {e}```')
         else:
-            await interaction.response.send_message(f'```{stdout}```', file=discord.File(f'{sse.SSE_FOLDER}/evolve.dat'))
+            embed = generate_embed(stdout)
+            await interaction.response.send_message(file=discord.File(f'{sse.SSE_FOLDER}/evolve.dat'), embed=embed)
 
     @bot.tree.command()
     @app_commands.describe(
@@ -102,7 +104,8 @@ def init():
                 await interaction.response.send_message(f'```{stdout}``````{type(e).__name__}: {e}```')
         else:
             await sse_plot.sse_plot(xbounds, ybounds)
-            await interaction.response.send_message(f'```{stdout}```', file=discord.File('hrdiag.png'))
+            embed = generate_embed(stdout)
+            await interaction.response.send_message(file=discord.File('hrdiag.png'), embed=embed)
 
     bot.run(TOKEN)
 
