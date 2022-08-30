@@ -63,7 +63,8 @@ def init():
                     await interaction.response.send_message(f'```{stdout}``````{e}```')
             else:
                 embed = generate_embed(stdout, title='Output')
-                await interaction.response.send_message(file=discord.File(f'{sse.SSE_FOLDER}/evolve.dat'), embed=embed)
+                await interaction.response.send_message(embed=embed)
+                await interaction.channel.send(file=discord.File(f'{sse.SSE_FOLDER}/evolve.dat'))
         else:
             try:
                 raise NotImplementedError('Negative or zero mass currently not supported')
