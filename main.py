@@ -60,7 +60,7 @@ def init():
             except EVOLV1Error as e:
                 await interaction.response.send_message(f'```{stdout}``````{type(e).__name__}: {e}```')
         else:
-            await interaction.response.send_message(f'```{stdout}```', file=discord.File('sse/evolve.dat'))
+            await interaction.response.send_message(f'```{stdout}```', file=discord.File(f'{sse.SSE_FOLDER}/evolve.dat'))
 
     @bot.tree.command()
     @app_commands.describe(
