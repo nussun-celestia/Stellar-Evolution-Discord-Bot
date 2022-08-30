@@ -9,14 +9,8 @@ import sse
 import sse_plot
 
 
-class EVOLV1FatalError(Exception):
-    def __init__(self, message: str) -> None:
-        super().__init__(message)
-
-
-class EVOLV1ArrayError(Exception):
-    def __init__(self, message: str) -> None:
-        super().__init__(message)
+class EVOLV1Error(Exception):
+    pass
 
 
 def init():
@@ -59,9 +53,11 @@ def init():
                                       ifflag=ifflag, wdflag=wdflag, bhflag=bhflag, nsflag=nsflag, mxns=mxns, idum=idum,
                                       pts1=pts1, pts2=pts2, pts3=pts3)
         stdout = await sse.run_sse()
-        if 'STOP' in stdout:
-            # An error has occured in evolv1
-            await interaction.response.send_message(f'```{stdout}```')
+        if 'ERROR' in stdout:
+            try:
+                raise EVOLV1Error('An error has occured in EVOLV1; try using different parameters')
+            except EVOLV1Error as e:
+                await interaction.response.send_message(f'```{stdout}``````{type(e).__name__}: {e}```')
         else:
             await interaction.response.send_message(f'```{stdout}```', file=discord.File('sse/evolve.dat'))
 
@@ -98,11 +94,13 @@ def init():
                                       ifflag=ifflag, wdflag=wdflag, bhflag=bhflag, nsflag=nsflag, mxns=mxns, idum=idum,
                                       pts1=pts1, pts2=pts2, pts3=pts3)
         stdout = await sse.run_sse()
-        await sse_plot.sse_plot(xbounds, ybounds)
-        if 'STOP' in stdout:
-            # An error has occured in evolv1
-            await interaction.response.send_message(f'```{stdout}```')
+        if 'ERROR' in stdout:
+            try:
+                raise EVOLV1Error('An error has occured in EVOLV1; try using different parameters')
+            except EVOLV1Error as e:
+                await interaction.response.send_message(f'```{stdout}``````{type(e).__name__}: {e}```')
         else:
+            await sse_plot.sse_plot(xbounds, ybounds)
             await interaction.response.send_message(f'```{stdout}```', file=discord.File('hrdiag.png'))
 
     bot.run(TOKEN)

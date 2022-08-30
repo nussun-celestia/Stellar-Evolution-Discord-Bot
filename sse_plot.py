@@ -66,7 +66,7 @@ async def sse_plot(xbounds: str='default', ybounds: str='default') -> None:
     plt.plot(x, y, color=(0, 0, 0), lw=1)
 
     # Save to file
-    plt.savefig('hrdiag.png')#plt.show()
+    plt.savefig('hrdiag.png')
 
     # Close the figure
     plt.close()
