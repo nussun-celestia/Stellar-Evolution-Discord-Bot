@@ -105,7 +105,9 @@ def init():
         else:
             await sse_plot.sse_plot(xbounds, ybounds)
             embed = generate_embed(stdout)
-            await interaction.response.send_message(file=discord.File('hrdiag.png'), embed=embed)
+            file = discord.File(f"hrdiag.png", filename='hrdiag.png')
+            embed.set_image(url=f"attachment://hrdiag.png")
+            await interaction.response.send_message(file=file, embed=embed)
 
     bot.run(TOKEN)
 
