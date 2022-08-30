@@ -49,18 +49,24 @@ def init():
                      neta: float=0.5, bwind: float=0.0, hewind: float=0.5, sigma: float=190.0,
                      ifflag: int=0, wdflag: int=1, bhflag: int=0, nsflag: int=1, mxns: float=3.0, idum: int=999,
                      pts1: float=0.05, pts2: float=0.01, pts3: float=0.02) -> None:
-        await sse.construct_evolve_in(mass, z, tphysf,
-                                      neta=neta, bwind=bwind, hewind=hewind, sigma=sigma,
-                                      ifflag=ifflag, wdflag=wdflag, bhflag=bhflag, nsflag=nsflag, mxns=mxns, idum=idum,
-                                      pts1=pts1, pts2=pts2, pts3=pts3)
-        stdout = await sse.run_sse()
-        if 'ERROR' in stdout:
-            try:
-                raise EVOLV1Error('An error has occured in EVOLV1; try using different parameters')
-            except EVOLV1Error as e:
-                await interaction.response.send_message(f'```{stdout}``````{type(e).__name__}: {e}```')
+        if mass > 0.0:
+            await sse.construct_evolve_in(mass, z, tphysf,
+                                        neta=neta, bwind=bwind, hewind=hewind, sigma=sigma,
+                                        ifflag=ifflag, wdflag=wdflag, bhflag=bhflag, nsflag=nsflag, mxns=mxns, idum=idum,
+                                        pts1=pts1, pts2=pts2, pts3=pts3)
+            stdout = await sse.run_sse()
+            if 'ERROR' in stdout:
+                try:
+                    raise EVOLV1Error('An error has occured in EVOLV1; try using different parameters')
+                except EVOLV1Error as e:
+                    await interaction.response.send_message(f'```{stdout}``````{e}```')
+            else:
+                await interaction.response.send_message(f'```{stdout}```', file=discord.File(f'{sse.SSE_FOLDER}/evolve.dat'))
         else:
-            await interaction.response.send_message(f'```{stdout}```', file=discord.File(f'{sse.SSE_FOLDER}/evolve.dat'))
+            try:
+                raise NotImplementedError('Negative or zero mass currently not supported')
+            except NotImplementedError as e:
+                await interaction.response.send_message(f'```{e}```')
 
     @bot.tree.command()
     @app_commands.describe(
@@ -90,19 +96,25 @@ def init():
                    neta: float=0.5, bwind: float=0.0, hewind: float=0.5, sigma: float=190.0,
                    ifflag: int=0, wdflag: int=1, bhflag: int=0, nsflag: int=1, mxns: float=3.0, idum: int=999,
                    pts1: float=0.05, pts2: float=0.01, pts3: float=0.02) -> None:
-        await sse.construct_evolve_in(mass, z, tphysf,
-                                      neta=neta, bwind=bwind, hewind=hewind, sigma=sigma,
-                                      ifflag=ifflag, wdflag=wdflag, bhflag=bhflag, nsflag=nsflag, mxns=mxns, idum=idum,
-                                      pts1=pts1, pts2=pts2, pts3=pts3)
-        stdout = await sse.run_sse()
-        if 'ERROR' in stdout:
-            try:
-                raise EVOLV1Error('An error has occured in EVOLV1; try using different parameters')
-            except EVOLV1Error as e:
-                await interaction.response.send_message(f'```{stdout}``````{type(e).__name__}: {e}```')
+        if mass > 0.0:
+            await sse.construct_evolve_in(mass, z, tphysf,
+                                        neta=neta, bwind=bwind, hewind=hewind, sigma=sigma,
+                                        ifflag=ifflag, wdflag=wdflag, bhflag=bhflag, nsflag=nsflag, mxns=mxns, idum=idum,
+                                        pts1=pts1, pts2=pts2, pts3=pts3)
+            stdout = await sse.run_sse()
+            if 'ERROR' in stdout:
+                try:
+                    raise EVOLV1Error('An error has occured in EVOLV1; try using different parameters')
+                except EVOLV1Error as e:
+                    await interaction.response.send_message(f'```{stdout}``````{e}```')
+            else:
+                await sse_plot.sse_plot(xbounds, ybounds)
+                await interaction.response.send_message(f'```{stdout}```', file=discord.File('hrdiag.png'))
         else:
-            await sse_plot.sse_plot(xbounds, ybounds)
-            await interaction.response.send_message(f'```{stdout}```', file=discord.File('hrdiag.png'))
+            try:
+                raise NotImplementedError('Negative or zero mass currently not supported')
+            except NotImplementedError as e:
+                await interaction.response.send_message(f'```{e}```')
 
     bot.run(TOKEN)
 
