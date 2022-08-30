@@ -20,7 +20,7 @@ Carbon/Oxygen WD              Time    12000.0 Mass   1.200"""
     for i in range(3):
         values[i] = values[i][:-1]
 
-    embed = Embed(title="Plot")
+    embed = Embed(title="Plot", colour=0x00FF00)
     embed.add_field(name="Stage", value=values[0], inline=True)
     embed.add_field(name="Time", value=values[1], inline=True)
     embed.add_field(name="Mass", value=values[2], inline=True)
