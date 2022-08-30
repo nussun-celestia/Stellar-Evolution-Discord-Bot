@@ -10,7 +10,15 @@ Carbon/Oxygen WD              Time      100.1 Mass   1.200
 Carbon/Oxygen WD              Time    12000.0 Mass   1.200"""
 
     matches = re.findall("(.+\\b)\s+Time\s+([\d.]+)\s+Mass\s+([\d.]+)", stdout)
-    print(matches)    
+
+    values = ["", "", ""]
+    for line in matches:
+        for i in range(3):
+            values[i] += line[i] + '\n'
+    
+    for i in range(3):
+        values[i] = values[i][:-1]
+    print(values)
 
 
 
