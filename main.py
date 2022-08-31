@@ -60,7 +60,8 @@ def init():
                 try:
                     raise EVOLV1Error('An error has occured in EVOLV1; try using different parameters')
                 except EVOLV1Error as e:
-                    await interaction.response.send_message(f'```{stdout}``````{e}```')
+                    embed = generate_embed(stdout, e, title="Error")
+                    await interaction.response.send_message(embed=embed)
             else:
                 embed = generate_embed(stdout, title='Output')
                 await interaction.response.send_message(embed=embed)
@@ -69,7 +70,8 @@ def init():
             try:
                 raise NotImplementedError('Negative or zero mass currently not supported')
             except NotImplementedError as e:
-                await interaction.response.send_message(f'```{e}```')
+                embed = generate_embed(e, title="Error")
+                await interaction.response.send_message(embed=embed)
 
     @bot.tree.command()
     @app_commands.describe(
@@ -109,7 +111,8 @@ def init():
                 try:
                     raise EVOLV1Error('An error has occured in EVOLV1; try using different parameters')
                 except EVOLV1Error as e:
-                    await interaction.response.send_message(f'```{stdout}``````{e}```')
+                    embed = generate_embed(stdout, e, title="Error")
+                    await interaction.response.send_message(embed=embed)
             else:
                 await sse_plot.sse_plot(xbounds, ybounds)
                 embed = generate_embed(stdout, title='Output')
@@ -120,7 +123,8 @@ def init():
             try:
                 raise NotImplementedError('Negative or zero mass currently not supported')
             except NotImplementedError as e:
-                await interaction.response.send_message(f'```{e}```')
+                embed = generate_embed(e, title="Error")
+                await interaction.response.send_message(embed=embed)
 
     bot.run(TOKEN)
 
