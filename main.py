@@ -42,9 +42,10 @@ def init():
 
     def sse_input_descriptions(func):
         return app_commands.describe(
-            # Descriptions borrowed from sse.f
+            # Descriptions borrowed from sse.f except for z_type
             mass='mass is in solar units.',
             z='z is metallicity in the range 0.0001 -> 0.03 where 0.02 is Population I.',
+            z_type='units to use for metallicity; one of: (z, feh)',
             tphysf='tphysf is the maximum evolution time in Myr.',
 
             neta='neta is the Reimers mass-loss coefficent (neta*4x10^-13; 0.5 normally).',
@@ -63,11 +64,13 @@ def init():
     @bot.tree.command()
     @sse_input_descriptions
     async def evolve(interaction: discord.Interaction,
-                     mass: float, z: float, tphysf: float,
+                     mass: float, z: float, tphysf: float, z_type: str='z',
                      neta: float=0.5, bwind: float=0.0, hewind: float=0.5, sigma: float=190.0,
                      ifflag: int=0, wdflag: int=1, bhflag: int=0, nsflag: int=1, mxns: float=3.0, idum: int=999,
                      pts1: float=0.05, pts2: float=0.01, pts3: float=0.02) -> None:
         if mass > 0.0:
+            if z_type == 'feh':
+                z = 0.02 * 10**z
             await sse.construct_evolve_in(mass, z, tphysf,
                                           neta=neta, bwind=bwind, hewind=hewind, sigma=sigma,
                                           ifflag=ifflag, wdflag=wdflag, bhflag=bhflag, nsflag=nsflag, mxns=mxns, idum=idum,
@@ -87,14 +90,17 @@ def init():
     @app_commands.describe(
         xbounds='x-axis bounds for the plot.',
         ybounds='y-axis bounds for the plot.',
+        theme='theme for the plot; use one of the available: (default, dark)'
     )
     async def plot(interaction: discord.Interaction,
-                   mass: float, z: float, tphysf: float,
-                   xbounds: str='default', ybounds: str='default',
+                   mass: float, z: float, tphysf: float, z_type: str='z',
+                   xbounds: str='default', ybounds: str='default', theme: str='default',
                    neta: float=0.5, bwind: float=0.0, hewind: float=0.5, sigma: float=190.0,
                    ifflag: int=0, wdflag: int=1, bhflag: int=0, nsflag: int=1, mxns: float=3.0, idum: int=999,
                    pts1: float=0.05, pts2: float=0.01, pts3: float=0.02) -> None:
         if mass > 0.0:
+            if z_type == 'feh':
+                z = 0.02 * 10**z
             await sse.construct_evolve_in(mass, z, tphysf,
                                           neta=neta, bwind=bwind, hewind=hewind, sigma=sigma,
                                           ifflag=ifflag, wdflag=wdflag, bhflag=bhflag, nsflag=nsflag, mxns=mxns, idum=idum,
@@ -103,7 +109,7 @@ def init():
             if 'ERROR' in stdout:
                 await handle_evolv1_error(interaction, stdout)
             else:
-                await sse_plot.sse_plot(xbounds, ybounds)
+                await sse_plot.sse_plot(xbounds, ybounds, theme)
                 embed = generate_embed(stdout, title='Output')
                 file = discord.File(f'hrdiag.png', filename='hrdiag.png')
                 embed.set_image(url=f'attachment://hrdiag.png')

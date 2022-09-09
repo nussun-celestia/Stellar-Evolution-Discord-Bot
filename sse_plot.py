@@ -6,7 +6,14 @@ from matplotlib.ticker import AutoMinorLocator, MultipleLocator
 import sse
 
 
-async def sse_plot(xbounds: str='default', ybounds: str='default') -> None:
+async def sse_plot(xbounds: str='default', ybounds: str='default', theme: str='default') -> None:
+    # Set theme
+    if theme == 'dark':
+        plt.style.use('dark_background')
+        line_color = (1, 1, 1)
+    else:
+        line_color = (0, 0, 0)
+
     # Create figure
     fig = plt.figure('SSE HR-diagram', figsize=(4, 5.7), dpi=200.0)
     ax = plt.gca()
@@ -63,7 +70,7 @@ async def sse_plot(xbounds: str='default', ybounds: str='default') -> None:
     y = track['log10(L)']
 
     # Plot on the HR-diagram
-    plt.plot(x, y, color=(0, 0, 0), lw=1)
+    plt.plot(x, y, color=line_color, lw=1)
 
     # Save to file
     plt.savefig('hrdiag.png')
